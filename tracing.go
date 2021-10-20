@@ -8,7 +8,6 @@ import (
 	"io"
 
 	"github.com/opentracing/opentracing-go"
-	"github.com/thanos-io/thanos/pkg/tracing"
 )
 
 // TracingBucket includes bucket operations in the traces.
@@ -21,7 +20,7 @@ func NewTracingBucket(bkt Bucket) InstrumentedBucket {
 }
 
 func (t TracingBucket) Iter(ctx context.Context, dir string, f func(string) error, options ...IterOption) (err error) {
-	tracing.DoWithSpan(ctx, "bucket_iter", func(spanCtx context.Context, span opentracing.Span) {
+	doWithSpan(ctx, "bucket_iter", func(spanCtx context.Context, span opentracing.Span) {
 		span.LogKV("dir", dir)
 		err = t.bkt.Iter(spanCtx, dir, f, options...)
 	})
@@ -29,7 +28,7 @@ func (t TracingBucket) Iter(ctx context.Context, dir string, f func(string) erro
 }
 
 func (t TracingBucket) Get(ctx context.Context, name string) (io.ReadCloser, error) {
-	span, spanCtx := tracing.StartSpan(ctx, "bucket_get")
+	span, spanCtx := startSpan(ctx, "bucket_get")
 	span.LogKV("name", name)
 
 	r, err := t.bkt.Get(spanCtx, name)
@@ -43,7 +42,7 @@ func (t TracingBucket) Get(ctx context.Context, name string) (io.ReadCloser, err
 }
 
 func (t TracingBucket) GetRange(ctx context.Context, name string, off, length int64) (io.ReadCloser, error) {
-	span, spanCtx := tracing.StartSpan(ctx, "bucket_getrange")
+	span, spanCtx := startSpan(ctx, "bucket_getrange")
 	span.LogKV("name", name, "offset", off, "length", length)
 
 	r, err := t.bkt.GetRange(spanCtx, name, off, length)
@@ -57,7 +56,7 @@ func (t TracingBucket) GetRange(ctx context.Context, name string, off, length in
 }
 
 func (t TracingBucket) Exists(ctx context.Context, name string) (exists bool, err error) {
-	tracing.DoWithSpan(ctx, "bucket_exists", func(spanCtx context.Context, span opentracing.Span) {
+	doWithSpan(ctx, "bucket_exists", func(spanCtx context.Context, span opentracing.Span) {
 		span.LogKV("name", name)
 		exists, err = t.bkt.Exists(spanCtx, name)
 	})
@@ -65,7 +64,7 @@ func (t TracingBucket) Exists(ctx context.Context, name string) (exists bool, er
 }
 
 func (t TracingBucket) Attributes(ctx context.Context, name string) (attrs ObjectAttributes, err error) {
-	tracing.DoWithSpan(ctx, "bucket_attributes", func(spanCtx context.Context, span opentracing.Span) {
+	doWithSpan(ctx, "bucket_attributes", func(spanCtx context.Context, span opentracing.Span) {
 		span.LogKV("name", name)
 		attrs, err = t.bkt.Attributes(spanCtx, name)
 	})
@@ -73,7 +72,7 @@ func (t TracingBucket) Attributes(ctx context.Context, name string) (attrs Objec
 }
 
 func (t TracingBucket) Upload(ctx context.Context, name string, r io.Reader) (err error) {
-	tracing.DoWithSpan(ctx, "bucket_upload", func(spanCtx context.Context, span opentracing.Span) {
+	doWithSpan(ctx, "bucket_upload", func(spanCtx context.Context, span opentracing.Span) {
 		span.LogKV("name", name)
 		err = t.bkt.Upload(spanCtx, name, r)
 	})
@@ -81,7 +80,7 @@ func (t TracingBucket) Upload(ctx context.Context, name string, r io.Reader) (er
 }
 
 func (t TracingBucket) Delete(ctx context.Context, name string) (err error) {
-	tracing.DoWithSpan(ctx, "bucket_delete", func(spanCtx context.Context, span opentracing.Span) {
+	doWithSpan(ctx, "bucket_delete", func(spanCtx context.Context, span opentracing.Span) {
 		span.LogKV("name", name)
 		err = t.bkt.Delete(spanCtx, name)
 	})
@@ -155,4 +154,47 @@ func (t *tracingReadCloser) Close() error {
 		t.s = nil
 	}
 	return err
+}
+
+type contextKey struct{}
+
+var tracerKey = contextKey{}
+
+// ContextWithTracer returns a new `context.Context` that holds a reference to given opentracing.Tracer.
+func ContextWithTracer(ctx context.Context, tracer opentracing.Tracer) context.Context {
+	return context.WithValue(ctx, tracerKey, tracer)
+}
+
+// tracerFromContext extracts opentracing.Tracer from the given context.
+func tracerFromContext(ctx context.Context) opentracing.Tracer {
+	val := ctx.Value(tracerKey)
+	if sp, ok := val.(opentracing.Tracer); ok {
+		return sp
+	}
+	return nil
+}
+
+// startSpan starts and returns span with `operationName` and hooking as child to a span found within given context if any.
+// It uses opentracing.Tracer propagated in context. If no found, it uses noop tracer without notification.
+func startSpan(ctx context.Context, operationName string, opts ...opentracing.StartSpanOption) (opentracing.Span, context.Context) {
+	tracer := tracerFromContext(ctx)
+	if tracer == nil {
+		// No tracing found, return noop span.
+		return opentracing.NoopTracer{}.StartSpan(operationName), ctx
+	}
+
+	var span opentracing.Span
+	if parentSpan := opentracing.SpanFromContext(ctx); parentSpan != nil {
+		opts = append(opts, opentracing.ChildOf(parentSpan.Context()))
+	}
+	span = tracer.StartSpan(operationName, opts...)
+	return span, opentracing.ContextWithSpan(ctx, span)
+}
+
+// doWithSpan executes function doFn inside new span with `operationName` name and hooking as child to a span found within given context if any.
+// It uses opentracing.Tracer propagated in context. If no found, it uses noop tracer notification.
+func doWithSpan(ctx context.Context, operationName string, doFn func(context.Context, opentracing.Span), opts ...opentracing.StartSpanOption) {
+	span, newCtx := startSpan(ctx, operationName, opts...)
+	defer span.Finish()
+	doFn(newCtx, span)
 }
