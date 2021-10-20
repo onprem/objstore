@@ -11,8 +11,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/efficientgo/tools/core/pkg/runutil"
 	"github.com/pkg/errors"
-	"github.com/thanos-io/thanos/pkg/runutil"
 	"gopkg.in/yaml.v2"
 
 	"github.com/efficientgo/objstore"

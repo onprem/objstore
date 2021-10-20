@@ -14,12 +14,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/efficientgo/tools/core/pkg/runutil"
 	"github.com/go-kit/kit/log"
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
 	"github.com/tencentyun/cos-go-sdk-v5"
 	"github.com/thanos-io/thanos/pkg/exthttp"
-	"github.com/thanos-io/thanos/pkg/runutil"
 	"gopkg.in/yaml.v2"
 
 	"github.com/efficientgo/objstore"

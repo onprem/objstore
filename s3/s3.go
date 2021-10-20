@@ -19,6 +19,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/efficientgo/tools/core/pkg/runutil"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/minio/minio-go/v7"
@@ -27,7 +28,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
 	"github.com/prometheus/common/version"
-	"github.com/thanos-io/thanos/pkg/runutil"
 	"gopkg.in/yaml.v2"
 
 	"github.com/efficientgo/objstore"
@@ -403,7 +403,7 @@ func (b *Bucket) getRange(ctx context.Context, name string, off, length int64) (
 	// NotFoundObject error is revealed only after first Read. This does the initial GetRequest. Prefetch this here
 	// for convenience.
 	if _, err := r.Read(nil); err != nil {
-		runutil.CloseWithLogOnErr(b.logger, r, "s3 get range obj close")
+		runutil.CloseWithLogOnErr(level.Warn(b.logger), r, "s3 get range obj close")
 
 		// First GET Object request error.
 		return nil, err

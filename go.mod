@@ -3,6 +3,7 @@ module github.com/efficientgo/objstore
 go 1.15
 
 replace (
+	github.com/efficientgo/tools/core v0.0.0-unpublish => ../tools/core
 	// TODO: Remove this: https://github.com/thanos-io/thanos/issues/3967.
 	github.com/minio/minio-go/v7 => github.com/bwplotka/minio-go/v7 v7.0.11-0.20210324165441-f9927e5255a6
 	// Make sure Prometheus version is pinned as Prometheus semver does not include Go APIs.
@@ -18,7 +19,7 @@ require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.0.4+incompatible
 	github.com/baidubce/bce-sdk-go v0.9.81
 	github.com/efficientgo/e2e v0.11.1
-	github.com/efficientgo/tools/core v0.0.0-20210829154005-c7bad8450208
+	github.com/efficientgo/tools/core v0.0.0-unpublish
 	github.com/go-kit/kit v0.11.0
 	github.com/minio/minio-go/v7 v7.0.10
 	github.com/ncw/swift v1.0.52
