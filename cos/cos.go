@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
+	"net"
 	"net/http"
 	"os"
 	"strings"
@@ -19,7 +20,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
 	"github.com/tencentyun/cos-go-sdk-v5"
-	"github.com/thanos-io/thanos/pkg/exthttp"
 	"gopkg.in/yaml.v2"
 
 	"github.com/efficientgo/objstore"
@@ -92,9 +92,22 @@ type HTTPConfig struct {
 	MaxConnsPerHost       int            `yaml:"max_conns_per_host"`
 }
 
+// NewTransport creates a new http.Transport with default settings.
+func newTransport() *http.Transport {
+	return &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		ForceAttemptHTTP2: true,
+	}
+}
+
 // DefaultTransport build http.Transport from config.
 func DefaultTransport(c HTTPConfig) *http.Transport {
-	transport := exthttp.NewTransport()
+	transport := newTransport()
 	transport.IdleConnTimeout = time.Duration(c.IdleConnTimeout)
 	transport.ResponseHeaderTimeout = time.Duration(c.ResponseHeaderTimeout)
 	transport.TLSHandshakeTimeout = time.Duration(c.TLSHandshakeTimeout)
