@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 // Package swift implements common object storage abstractions against OpenStack swift APIs.
@@ -22,7 +22,7 @@ import (
 	"github.com/prometheus/common/model"
 	"gopkg.in/yaml.v2"
 
-	"github.com/efficientgo/objstore"
+	"github.com/thanos-io/objstore"
 )
 
 const (

@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package objtesting
@@ -11,16 +11,16 @@ import (
 
 	"github.com/efficientgo/tools/core/pkg/testutil"
 
-	"github.com/efficientgo/objstore"
-	"github.com/efficientgo/objstore/azure"
-	"github.com/efficientgo/objstore/bos"
-	"github.com/efficientgo/objstore/client"
-	"github.com/efficientgo/objstore/cos"
-	"github.com/efficientgo/objstore/filesystem"
-	"github.com/efficientgo/objstore/gcs"
-	"github.com/efficientgo/objstore/oss"
-	"github.com/efficientgo/objstore/s3"
-	"github.com/efficientgo/objstore/swift"
+	"github.com/thanos-io/objstore"
+	"github.com/thanos-io/objstore/azure"
+	"github.com/thanos-io/objstore/bos"
+	"github.com/thanos-io/objstore/client"
+	"github.com/thanos-io/objstore/cos"
+	"github.com/thanos-io/objstore/filesystem"
+	"github.com/thanos-io/objstore/gcs"
+	"github.com/thanos-io/objstore/oss"
+	"github.com/thanos-io/objstore/s3"
+	"github.com/thanos-io/objstore/swift"
 )
 
 // IsObjStoreSkipped returns true if given provider ID is found in THANOS_TEST_OBJSTORE_SKIP array delimited by comma e.g:

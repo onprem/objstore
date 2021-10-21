@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 // Package s3 implements common object storage abstractions against s3-compatible APIs.
@@ -30,7 +30,7 @@ import (
 	"github.com/prometheus/common/version"
 	"gopkg.in/yaml.v2"
 
-	"github.com/efficientgo/objstore"
+	"github.com/thanos-io/objstore"
 )
 
 type ctxKey int

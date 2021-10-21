@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package bos
@@ -22,7 +22,7 @@ import (
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 
-	"github.com/efficientgo/objstore"
+	"github.com/thanos-io/objstore"
 )
 
 // partSize 128MB.

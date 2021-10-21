@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 // Package gcs implements common object storage abstractions against Google Cloud Storage.
@@ -21,7 +21,7 @@ import (
 	"google.golang.org/api/option"
 	"gopkg.in/yaml.v2"
 
-	"github.com/efficientgo/objstore"
+	"github.com/thanos-io/objstore"
 )
 
 // DirDelim is the delimiter used to model a directory structure in an object store bucket.

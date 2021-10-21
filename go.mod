@@ -1,9 +1,9 @@
-module github.com/efficientgo/objstore
+module github.com/thanos-io/objstore
 
 go 1.15
 
 replace (
-	github.com/efficientgo/tools/core v0.0.0-unpublish => ../tools/core
+	github.com/efficientgo/tools/core v0.0.0-unpublish => ../../efficientgo/tools/core
 	// TODO: Remove this: https://github.com/thanos-io/thanos/issues/3967.
 	github.com/minio/minio-go/v7 => github.com/bwplotka/minio-go/v7 v7.0.11-0.20210324165441-f9927e5255a6
 )

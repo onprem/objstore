@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package s3_test
@@ -14,7 +14,7 @@ import (
 	"github.com/efficientgo/tools/core/pkg/testutil"
 	"github.com/go-kit/kit/log"
 
-	"github.com/efficientgo/objstore/s3"
+	"github.com/thanos-io/objstore/s3"
 )
 
 // Regression benchmark for https://github.com/thanos-io/thanos/issues/3917.

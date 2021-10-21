@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package objstore
@@ -193,7 +193,7 @@ func startSpan(ctx context.Context, operationName string, opts ...opentracing.St
 
 // doWithSpan executes function doFn inside new span with `operationName` name and hooking as child to a span found within given context if any.
 // It uses opentracing.Tracer propagated in context. If no found, it uses noop tracer notification.
-func doWithSpan(ctx context.Context, operationName string, doFn func(context.Context, opentracing.Span), opts ...opentracing.StartSpanOption) {
+func doWithSpan(ctx context.Context, operationName string, doFn func(context.Context, opentracing.Span), opts ...opentracing.StartSpanOption) { //nolint:unparam
 	span, newCtx := startSpan(ctx, operationName, opts...)
 	defer span.Finish()
 	doFn(newCtx, span)

@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package cos
@@ -22,8 +22,8 @@ import (
 	"github.com/tencentyun/cos-go-sdk-v5"
 	"gopkg.in/yaml.v2"
 
-	"github.com/efficientgo/objstore"
-	"github.com/efficientgo/objstore/clientutil"
+	"github.com/thanos-io/objstore"
+	"github.com/thanos-io/objstore/clientutil"
 )
 
 // DirDelim is the delimiter used to model a directory structure in an object store bucket.

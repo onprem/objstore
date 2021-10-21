@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package client
@@ -14,15 +14,15 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/efficientgo/objstore"
-	"github.com/efficientgo/objstore/azure"
-	"github.com/efficientgo/objstore/bos"
-	"github.com/efficientgo/objstore/cos"
-	"github.com/efficientgo/objstore/filesystem"
-	"github.com/efficientgo/objstore/gcs"
-	"github.com/efficientgo/objstore/oss"
-	"github.com/efficientgo/objstore/s3"
-	"github.com/efficientgo/objstore/swift"
+	"github.com/thanos-io/objstore"
+	"github.com/thanos-io/objstore/azure"
+	"github.com/thanos-io/objstore/bos"
+	"github.com/thanos-io/objstore/cos"
+	"github.com/thanos-io/objstore/filesystem"
+	"github.com/thanos-io/objstore/gcs"
+	"github.com/thanos-io/objstore/oss"
+	"github.com/thanos-io/objstore/s3"
+	"github.com/thanos-io/objstore/swift"
 )
 
 type ObjProvider string

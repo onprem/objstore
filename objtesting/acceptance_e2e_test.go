@@ -1,4 +1,4 @@
-// Copyright (c) The EfficientGo Authors.
+// Copyright (c) The Thanos Authors.
 // Licensed under the Apache License 2.0.
 
 package objtesting
@@ -6,7 +6,7 @@ package objtesting
 import (
 	"testing"
 
-	"github.com/efficientgo/objstore"
+	"github.com/thanos-io/objstore"
 )
 
 // TestObjStoreAcceptanceTest_e2e tests all known implementation against interface behavior contract we agreed on.
