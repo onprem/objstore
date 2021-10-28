@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/efficientgo/tools/core/pkg/runutil"
+	"github.com/efficientgo/tools/core/pkg/logerrcapture"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/pkg/errors"
@@ -197,7 +197,7 @@ func UploadFile(ctx context.Context, logger log.Logger, bkt Bucket, src, dst str
 	if err != nil {
 		return errors.Wrapf(err, "open file %s", src)
 	}
-	defer runutil.CloseWithLogOnErr(level.Warn(logger), r, "close file %s", src)
+	defer logerrcapture.Do(level.Warn(logger), r.Close, "close file %s", src)
 
 	if err := bkt.Upload(ctx, dst, r); err != nil {
 		return errors.Wrapf(err, "upload file %s as %s", src, dst)
@@ -225,7 +225,7 @@ func DownloadFile(ctx context.Context, logger log.Logger, bkt BucketReader, src,
 	if err != nil {
 		return errors.Wrapf(err, "get file %s", src)
 	}
-	defer runutil.CloseWithLogOnErr(level.Warn(logger), rc, "download block's file reader")
+	defer logerrcapture.Do(level.Warn(logger), rc.Close, "download block's file reader")
 
 	f, err := os.Create(dst)
 	if err != nil {
@@ -238,7 +238,7 @@ func DownloadFile(ctx context.Context, logger log.Logger, bkt BucketReader, src,
 			}
 		}
 	}()
-	defer runutil.CloseWithLogOnErr(level.Warn(logger), f, "download block's output file")
+	defer logerrcapture.Do(level.Warn(logger), f.Close, "download block's output file")
 
 	if _, err = io.Copy(f, rc); err != nil {
 		return errors.Wrap(err, "copy object to file")

@@ -19,7 +19,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/efficientgo/tools/core/pkg/runutil"
+	"github.com/efficientgo/tools/core/pkg/logerrcapture"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 	"github.com/minio/minio-go/v7"
@@ -403,7 +403,7 @@ func (b *Bucket) getRange(ctx context.Context, name string, off, length int64) (
 	// NotFoundObject error is revealed only after first Read. This does the initial GetRequest. Prefetch this here
 	// for convenience.
 	if _, err := r.Read(nil); err != nil {
-		runutil.CloseWithLogOnErr(level.Warn(b.logger), r, "s3 get range obj close")
+		logerrcapture.Do(level.Warn(b.logger), r.Close, "s3 get range obj close")
 
 		// First GET Object request error.
 		return nil, err

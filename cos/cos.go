@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/efficientgo/tools/core/pkg/runutil"
+	"github.com/efficientgo/tools/core/pkg/logerrcapture"
 	"github.com/go-kit/kit/log"
 	"github.com/pkg/errors"
 	"github.com/prometheus/common/model"
@@ -239,7 +239,7 @@ func (b *Bucket) getRange(ctx context.Context, name string, off, length int64) (
 		return nil, err
 	}
 	if _, err := resp.Body.Read(nil); err != nil {
-		runutil.ExhaustCloseWithLogOnErr(b.logger, resp.Body, "cos get range obj close")
+		logerrcapture.ExhaustClose(b.logger, resp.Body, "cos get range obj close")
 		return nil, err
 	}
 
